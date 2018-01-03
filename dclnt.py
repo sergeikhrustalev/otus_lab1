@@ -81,7 +81,7 @@ def get_top_verbs_in_function_names(function_names, top_size=10):
 
 
 if __name__ == '__main__':
-    wds = []
+    words = []
     projects = [
         'django',
         'flask',
@@ -99,9 +99,9 @@ if __name__ == '__main__':
         print('trees generated')
         function_names = get_typical_function_names(trees)
         print('functions extracted')
-        wds += get_top_verbs_in_function_names(function_names)
+        words += get_top_verbs_in_function_names(function_names)
 
     top_size = 200
-    print('total {} words, {} unique'.format(len(wds), len(set(wds))))
-    for word, occurence in collections.Counter(wds).most_common(top_size):
+    print('total {} words, {} unique'.format(len(words), len(set(words))))
+    for word, occurence in collections.Counter(words).most_common(top_size):
         print(word, occurence)
