@@ -18,6 +18,15 @@ def is_verb(word):
 
 Path = ''
 
+def get_tree(filename):
+    with open(filename) as file_handler:
+        main_file_content = file_handler.read()
+    try:
+        return ast.parse(main_file_content)
+    except SyntaxError as e:
+        print(e)
+
+
 def get_trees(_path, with_filenames=False, with_file_content=False):
     filenames = []
     trees = []
@@ -30,13 +39,7 @@ def get_trees(_path, with_filenames=False, with_file_content=False):
                     break
     print('total %s files' % len(filenames))
     for filename in filenames:
-        with open(filename, 'r', encoding='utf-8') as attempt_handler:
-            main_file_content = attempt_handler.read()
-        try:
-            tree = ast.parse(main_file_content)
-        except SyntaxError as e:
-            print(e)
-            tree = None
+        tree = get_tree(filename)
         if with_filenames:
             if with_file_content:
                 trees.append((filename, main_file_content, tree))
