@@ -44,12 +44,7 @@ def get_contents_from_files(filenames):
 
 
 def get_ast_trees(contents):
-    trees = []
-    for content in contents:
-        tree = get_ast_tree(content)
-        if tree is not None:
-            trees.append(tree)
-    return trees
+    return [tree for tree in [get_ast_tree(content) for content in contents] if tree]
 
 
 def get_typical_function_names_in_trees(trees):
