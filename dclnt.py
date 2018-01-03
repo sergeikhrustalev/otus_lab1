@@ -5,9 +5,8 @@ import collections
 from nltk import pos_tag
 
 
-def flat(_list):
-    """ [(1,2), (3,4)] -> [1, 2, 3, 4]"""
-    return sum([list(item) for item in _list], [])
+def flat_list(multiple_list):
+    return sum(multiple_list, [])
 
 
 def is_verb(word):
@@ -54,7 +53,7 @@ def get_ast_trees(contents):
 
 
 def get_typical_function_names_in_trees(trees):
-    function_names = flat([[node.name.lower() for node in ast.walk(t) if isinstance(node, ast.FunctionDef)] for t in trees])
+    function_names = flat_list([[node.name.lower() for node in ast.walk(t) if isinstance(node, ast.FunctionDef)] for t in trees])
     return [f for f in function_names if not (f.startswith('__') and f.endswith('__'))]
 
 
@@ -63,7 +62,7 @@ def get_verbs_from_function_name(function_name):
 
 
 def get_top_verbs_in_function_names(function_names, top_size=10):
-    verbs = flat([get_verbs_from_function_name(function_name) for function_name in function_names])
+    verbs = flat_list([get_verbs_from_function_name(function_name) for function_name in function_names])
     return collections.Counter(verbs).most_common(top_size)
 
 
