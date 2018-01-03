@@ -73,7 +73,7 @@ projects = [
 for project in projects:
     path = os.path.join('.', project)
     filenames = get_python_code_filenames(path)
-    print('total %s files' % len(filenames))
+    print('total {} files'.format(len(filenames)))
     contents = get_contents_from_files(filenames)
     trees = get_ast_trees(contents)
     print('trees generated')
@@ -82,6 +82,6 @@ for project in projects:
     wds += get_top_verbs_in_function_names(function_names)
 
 top_size = 200
-print('total %s words, %s unique' % (len(wds), len(set(wds))))
+print('total {} words, {} unique'.format(len(wds), len(set(wds))))
 for word, occurence in collections.Counter(wds).most_common(top_size):
     print(word, occurence)
