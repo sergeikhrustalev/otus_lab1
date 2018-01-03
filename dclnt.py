@@ -44,12 +44,29 @@ def get_contents_from_files(filenames):
 
 
 def get_ast_trees(contents):
-    return [tree for tree in [get_ast_tree(content) for content in contents] if tree]
+    return [
+        tree
+        for tree in [get_ast_tree(content) for content in contents]
+        if tree
+    ]
 
 
 def get_typical_function_names(trees):
-    function_names = flat_list([[node.name.lower() for node in ast.walk(t) if isinstance(node, ast.FunctionDef)] for t in trees])
-    return [f for f in function_names if not (f.startswith('__') and f.endswith('__'))]
+    func_names = flat_list(
+        [
+            [
+                node.name.lower()
+                for node in ast.walk(tree)
+                if isinstance(node, ast.FunctionDef)
+            ]
+            for tree in trees
+        ]
+    )
+    return [
+        func
+        for func in func_names
+        if not (func.startswith('__') and func.endswith('__'))
+    ]
 
 
 def get_verbs_from_function_name(function_name):
@@ -57,31 +74,34 @@ def get_verbs_from_function_name(function_name):
 
 
 def get_top_verbs_in_function_names(function_names, top_size=10):
-    verbs = flat_list([get_verbs_from_function_name(function_name) for function_name in function_names])
+    verbs = flat_list(
+        [get_verbs_from_function_name(name) for name in function_names]
+    )
     return collections.Counter(verbs).most_common(top_size)
 
 
-wds = []
-projects = [
-    'django',
-    'flask',
-    'pyramid',
-    'reddit',
-    'requests',
-    'sqlalchemy',
-]
-for project in projects:
-    path = os.path.join('.', project)
-    filenames = get_python_code_filenames(path)
-    print('total {} files'.format(len(filenames)))
-    contents = get_contents_from_files(filenames)
-    trees = get_ast_trees(contents)
-    print('trees generated')
-    function_names = get_typical_function_names(trees)
-    print('functions extracted')
-    wds += get_top_verbs_in_function_names(function_names)
+if __name__ == '__main__':
+    wds = []
+    projects = [
+        'django',
+        'flask',
+        'pyramid',
+        'reddit',
+        'requests',
+        'sqlalchemy',
+    ]
+    for project in projects:
+        path = os.path.join('.', project)
+        filenames = get_python_code_filenames(path)
+        print('total {} files'.format(len(filenames)))
+        contents = get_contents_from_files(filenames)
+        trees = get_ast_trees(contents)
+        print('trees generated')
+        function_names = get_typical_function_names(trees)
+        print('functions extracted')
+        wds += get_top_verbs_in_function_names(function_names)
 
-top_size = 200
-print('total {} words, {} unique'.format(len(wds), len(set(wds))))
-for word, occurence in collections.Counter(wds).most_common(top_size):
-    print(word, occurence)
+    top_size = 200
+    print('total {} words, {} unique'.format(len(wds), len(set(wds))))
+    for word, occurence in collections.Counter(wds).most_common(top_size):
+        print(word, occurence)
