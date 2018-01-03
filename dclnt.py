@@ -26,13 +26,13 @@ def get_tree(filename):
         print('ERROR: ', e)
 
 
-def get_filenames(path):
+def get_python_code_filenames(path, max_filenames=100):
     filenames = []
     for dirname, dirs, files in os.walk(path, topdown=True):
         for file in files:
             if file.endswith('.py'):
                 filenames.append(os.path.join(dirname, file))
-                if len(filenames) == 100:
+                if len(filenames) == max_filenames:
                     break
     return filenames
 
@@ -70,7 +70,7 @@ projects = [
 ]
 for project in projects:
     path = os.path.join('.', project)
-    filenames = get_filenames(path)
+    filenames = get_python_code_filenames(path)
     print('total %s files' % len(filenames))
     trees = get_trees(filenames)
     print('trees generated')
