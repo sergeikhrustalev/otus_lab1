@@ -24,8 +24,8 @@ def get_content_from_file(filename):
 def get_ast_tree(content):
     try:
         return ast.parse(content)
-    except SyntaxError as e:
-        print('ERROR: ', e)
+    except SyntaxError as error:
+        print(error)
 
 
 def get_python_code_filenames(path, max_filenames=100):
@@ -47,7 +47,7 @@ def get_ast_trees(contents):
     return [tree for tree in [get_ast_tree(content) for content in contents] if tree]
 
 
-def get_typical_function_names_in_trees(trees):
+def get_typical_function_names(trees):
     function_names = flat_list([[node.name.lower() for node in ast.walk(t) if isinstance(node, ast.FunctionDef)] for t in trees])
     return [f for f in function_names if not (f.startswith('__') and f.endswith('__'))]
 
@@ -77,7 +77,7 @@ for project in projects:
     contents = get_contents_from_files(filenames)
     trees = get_ast_trees(contents)
     print('trees generated')
-    function_names = get_typical_function_names_in_trees(trees)
+    function_names = get_typical_function_names(trees)
     print('functions extracted')
     wds += get_top_verbs_in_function_names(function_names)
 
