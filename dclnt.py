@@ -47,7 +47,8 @@ def get_trees(filenames):
 
 
 def get_typical_function_names_in_trees(trees):
-    return [f for f in flat([[node.name.lower() for node in ast.walk(t) if isinstance(node, ast.FunctionDef)] for t in trees]) if not (f.startswith('__') and f.endswith('__'))]
+    function_names = flat([[node.name.lower() for node in ast.walk(t) if isinstance(node, ast.FunctionDef)] for t in trees])
+    return [f for f in function_names if not (f.startswith('__') and f.endswith('__'))]
 
 
 def get_verbs_from_function_name(function_name):
