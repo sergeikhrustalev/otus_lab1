@@ -17,11 +17,14 @@ def is_verb(word):
     return pos_info[0][1] == 'VB'
 
 
-def get_tree(filename):
+def get_content_from_file(filename):
     with open(filename) as file_handler:
-        main_file_content = file_handler.read()
+        return file_handler.read()
+
+
+def get_ast_tree(content):
     try:
-        return ast.parse(main_file_content)
+        return ast.parse(content)
     except SyntaxError as e:
         print('ERROR: ', e)
 
@@ -37,10 +40,14 @@ def get_python_code_filenames(path, max_filenames=100):
     return filenames
 
 
-def get_trees(filenames):
+def get_contents_from_files(filenames):
+    return [get_content_from_file(filename) for filename in filenames]
+
+
+def get_trees(contents):
     trees = []
-    for filename in filenames:
-        tree = get_tree(filename)
+    for content in contents:
+        tree = get_ast_tree(content)
         if tree is not None:
             trees.append(tree)
     return trees
@@ -73,7 +80,8 @@ for project in projects:
     path = os.path.join('.', project)
     filenames = get_python_code_filenames(path)
     print('total %s files' % len(filenames))
-    trees = get_trees(filenames)
+    contents = get_contents_from_files(filenames)
+    trees = get_trees(contents)
     print('trees generated')
     function_names = get_typical_function_names_in_trees(trees)
     print('functions extracted')
