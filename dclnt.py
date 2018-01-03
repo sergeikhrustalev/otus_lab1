@@ -44,7 +44,7 @@ def get_contents_from_files(filenames):
     return [get_content_from_file(filename) for filename in filenames]
 
 
-def get_trees(contents):
+def get_ast_trees(contents):
     trees = []
     for content in contents:
         tree = get_ast_tree(content)
@@ -81,7 +81,7 @@ for project in projects:
     filenames = get_python_code_filenames(path)
     print('total %s files' % len(filenames))
     contents = get_contents_from_files(filenames)
-    trees = get_trees(contents)
+    trees = get_ast_trees(contents)
     print('trees generated')
     function_names = get_typical_function_names_in_trees(trees)
     print('functions extracted')
