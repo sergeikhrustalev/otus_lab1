@@ -46,7 +46,7 @@ def get_trees(filenames):
     return trees
 
 
-def get_functions_from_trees(trees):
+def get_typical_function_names_in_trees(trees):
     return [f for f in flat([[node.name.lower() for node in ast.walk(t) if isinstance(node, ast.FunctionDef)] for t in trees]) if not (f.startswith('__') and f.endswith('__'))]
 
 
@@ -54,8 +54,8 @@ def get_verbs_from_function_name(function_name):
     return [word for word in function_name.split('_') if is_verb(word)]
 
 
-def get_top_verbs_in_functions(functions, top_size=10):
-    verbs = flat([get_verbs_from_function_name(function_name) for function_name in functions])
+def get_top_verbs_in_function_names(function_names, top_size=10):
+    verbs = flat([get_verbs_from_function_name(function_name) for function_name in function_names])
     return collections.Counter(verbs).most_common(top_size)
 
 
@@ -74,9 +74,9 @@ for project in projects:
     print('total %s files' % len(filenames))
     trees = get_trees(filenames)
     print('trees generated')
-    functions = get_functions_from_trees(trees)
+    function_names = get_typical_function_names_in_trees(trees)
     print('functions extracted')
-    wds += get_top_verbs_in_functions(functions)
+    wds += get_top_verbs_in_function_names(function_names)
 
 top_size = 200
 print('total %s words, %s unique' % (len(wds), len(set(wds))))
