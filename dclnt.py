@@ -34,7 +34,6 @@ def get_filenames(path):
                 filenames.append(os.path.join(dirname, file))
                 if len(filenames) == 100:
                     break
-    print('total %s files' % len(filenames))
     return filenames
 
 
@@ -44,7 +43,6 @@ def get_trees(filenames):
         tree = get_tree(filename)
         if tree is not None:
             trees.append(tree)
-    print('trees generated')
     return trees
 
 
@@ -56,9 +54,7 @@ def get_verbs_from_function_name(function_name):
     return [word for word in function_name.split('_') if is_verb(word)]
 
 
-def get_top_verbs_in_path(path, top_size=10):
-    filenames = get_filenames(path)
-    trees = get_trees(filenames)
+def get_top_verbs_in_trees(trees, top_size=10):
     fncs = [f for f in flat([[node.name.lower() for node in ast.walk(t) if isinstance(node, ast.FunctionDef)] for t in trees]) if not (f.startswith('__') and f.endswith('__'))]
     print('functions extracted')
     verbs = flat([get_verbs_from_function_name(function_name) for function_name in fncs])
@@ -76,7 +72,11 @@ projects = [
 ]
 for project in projects:
     path = os.path.join('.', project)
-    wds += get_top_verbs_in_path(path)
+    filenames = get_filenames(path)
+    print('total %s files' % len(filenames))
+    trees = get_trees(filenames)
+    print('trees generated')
+    wds += get_top_verbs_in_trees(trees)
 
 top_size = 200
 print('total %s words, %s unique' % (len(wds), len(set(wds))))
