@@ -23,7 +23,7 @@ def get_tree(filename):
     try:
         return ast.parse(main_file_content)
     except SyntaxError as e:
-        print(e)
+        print('ERROR: ', e)
 
 
 def get_filenames(path):
@@ -37,12 +37,13 @@ def get_filenames(path):
     print('total %s files' % len(filenames))
     return filenames
 
-def get_trees(path):
-    filenames = get_filenames(path)
+
+def get_trees(filenames):
     trees = []
     for filename in filenames:
         tree = get_tree(filename)
-        trees.append(tree)
+        if tree is not None:
+            trees.append(tree)
     print('trees generated')
     return trees
 
@@ -56,7 +57,8 @@ def get_verbs_from_function_name(function_name):
 
 
 def get_top_verbs_in_path(path, top_size=10):
-    trees = [t for t in get_trees(path) if t]
+    filenames = get_filenames(path)
+    trees = get_trees(filenames)
     fncs = [f for f in flat([[node.name.lower() for node in ast.walk(t) if isinstance(node, ast.FunctionDef)] for t in trees]) if not (f.startswith('__') and f.endswith('__'))]
     print('functions extracted')
     verbs = flat([get_verbs_from_function_name(function_name) for function_name in fncs])
