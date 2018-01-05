@@ -30,6 +30,6 @@ $ pip install nltk
 
 ## Run script
 ```
-python dclnt.py
+$ python dclnt.py
 ```
 See result of running proccess in a console 
