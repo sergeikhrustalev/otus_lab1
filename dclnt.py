@@ -80,8 +80,13 @@ def get_top_verbs_in_function_names(function_names, top_size=10):
     return collections.Counter(verbs).most_common(top_size)
 
 
+def get_top_words(words, top_size=200):
+    return collections.Counter(words).most_common(top_size)
+
+
 if __name__ == '__main__':
     words = []
+
     projects = [
         'django',
         'flask',
@@ -90,6 +95,7 @@ if __name__ == '__main__':
         'requests',
         'sqlalchemy',
     ]
+
     for project in projects:
         path = os.path.join('.', project)
         filenames = get_python_code_filenames(path)
@@ -101,7 +107,6 @@ if __name__ == '__main__':
         print('functions extracted')
         words += get_top_verbs_in_function_names(function_names)
 
-    top_size = 200
     print('total {} words, {} unique'.format(len(words), len(set(words))))
-    for word, occurence in collections.Counter(words).most_common(top_size):
+    for word, occurence in get_top_words(words):
         print(word, occurence)
